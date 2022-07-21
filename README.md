@@ -1,0 +1,2 @@
+# prisma-sdl-generator
+ 
