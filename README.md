@@ -182,8 +182,8 @@ Respective exported names are commented for reference
 │   │   │   ├── editBars.ts // editBars
 │   │   │   └── index.ts
 │   │   ├── queryOne
-│   │   │   ├── foo.ts // editFoos
-│   │   │   ├── bar.ts // editBars
+│   │   │   ├── foo.ts // foo
+│   │   │   ├── bar.ts // bar
 │   │   │   └── index.ts
 │   │   └── queries
 │   │       ├── foos.ts // foos
