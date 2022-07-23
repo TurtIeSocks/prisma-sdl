@@ -1,4 +1,4 @@
-# Prisma SDL Generator
+# Prisma SDL
 
 ## Features
 
@@ -173,7 +173,7 @@ Respective exported names are commented for reference
 │   └── index.ts
 ├── server
 │   ├── context
-|   │   ├── context.ts // context
+│   │   ├── context.ts // context
 │   │   └── index.ts
 │   ├── resolvers
 │   │   ├── resolvers.ts // resolvers
