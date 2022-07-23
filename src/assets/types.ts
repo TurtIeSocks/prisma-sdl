@@ -1,5 +1,20 @@
 import { VALID_TYPES } from './constants'
 
+export interface Options {
+  root?: string
+  dest?: string
+  header?: string
+  fileTypes?: Extension[]
+}
+
+export interface ReturnObj {
+  models: ModelTemplate[]
+  schema: Schema
+  resolvers: FileTypes
+  typeDefs: FileTypes
+  context: FileTypes
+}
+
 export type ValidType = typeof VALID_TYPES[number] | ''
 
 export interface FileTypes {
@@ -67,19 +82,4 @@ export interface ModelTemplate extends Model {
     hookMut: ModelFile
     tsTypes: ModelFile
   }
-}
-
-export interface Options {
-  root?: string
-  dest?: string
-  header?: string
-  fileTypes?: Extension[]
-}
-
-export interface ReturnObj {
-  models: ModelTemplate[]
-  schema: Schema
-  resolvers: FileTypes
-  typeDefs: FileTypes
-  context: FileTypes
 }

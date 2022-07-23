@@ -16,6 +16,9 @@
   "bugs": {
     "url": "https://github.com/TurtIeSocks/prisma-sdl/issues"
   },
+  "bin": {
+    "prisma-sdl": "./dist/cli.js"
+  },
   "keywords": [
     "prisma",
     "graphql",
@@ -31,8 +34,8 @@
     "url": "https://github.com/sponsors/TurtIeSocks"
   },
   "scripts": {
-    "start": "ts-node src/index.ts",
-    "generate": "prisma generate --schema=./examples/rdt/schema.prisma && prisma generate --schema=./examples/admin/schema.prisma",
+    "start": "node .",
+    "dev": "ts-node src/index.ts",
     "lint": "eslint \"**/*.{ts,tsx}\" && prettier --check \"**/*.{ts,tsx}\"",
     "fix": "eslint \"**/*.{ts,tsx}\" --fix && prettier --write \"**/*.{ts,tsx}\""
   },
