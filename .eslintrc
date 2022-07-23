@@ -1,0 +1,41 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": [
+      "./tsconfig.json"
+    ]
+  },
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "rules": {
+    "semi": "off",
+    "@typescript-eslint/semi": 0,
+    "consistent-return": 0,
+    "radix": 0,
+    "import/prefer-default-export": 0,
+    "@typescript-eslint/no-non-null-assertion": 0
+  },
+  "settings": {
+    "node": {
+      "extensions": [
+        ".ts",
+        ".tsx"
+      ],
+      "import/resolver": {
+        "alias": {
+          "extensions": [
+            ".ts",
+            ".tsx"
+          ]
+        }
+      }
+    }
+  }
+}

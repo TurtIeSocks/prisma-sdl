@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ES2020",
+    ],
+    "target": "ES2020",
+    "removeComments": true,
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": false,
+    "noImplicitThis": true,
+    "noUncheckedIndexedAccess": true,
+    "strictNullChecks": true,
+    "jsx": "react",
+    "declaration": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "baseUrl": "./generated",
+    "outDir": "./dist",
+  },
+  "ignore": ["node_modules", "examples"],
+}

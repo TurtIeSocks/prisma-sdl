@@ -1,0 +1,351 @@
+generator client {
+  provider     = "prisma-client-js"
+  output       = "../../../node_modules/@prisma/client/rdt"
+  sdlGenerator = "rdt"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("RDT_DATABASE_URL")
+}
+
+model Supporter {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("supporters")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  githubId  Int      @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Project Project[]
+
+  @@map("users")
+}
+
+model ChartType {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  ProjectChart Chart[]
+
+  @@map("chart_types")
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  displayName String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  Project     Project[]
+  Subcategory Subcategory[]
+  Infographic Infographic[]
+
+  @@map("categories")
+}
+
+model Subcategory {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  displayName String?
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId  Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  Project     Project[]
+  Infographic Infographic[]
+
+  @@map("subcategories")
+}
+
+model Geojson {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  url       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  ProjectChart Chart[]
+
+  @@map("geojsons")
+}
+
+model FilterType {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  FilterTypes FiltersOnCharts[]
+
+  @@map("filter_types")
+}
+
+model FilterCategory {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  FilterCategory FiltersOnCharts[]
+
+  @@map("filter_categories")
+}
+
+model Project {
+  id            Int          @id @default(autoincrement())
+  name          String       @unique
+  category      Category?    @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  categoryId    Int?
+  subcategory   Subcategory? @relation(fields: [subcategoryId], references: [id], onDelete: SetNull)
+  subcategoryId Int?
+  user          User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId        Int?
+  description   String?      @db.Text
+  published     Boolean      @default(false)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  Dataset Dataset[]
+
+  @@map("projects")
+}
+
+model Chart {
+  id          Int       @id @default(autoincrement())
+  dataset     Dataset   @relation(fields: [datasetId], references: [id], onDelete: Cascade)
+  datasetId   Int
+  chartType   ChartType @relation(fields: [chartTypeId], references: [id], onDelete: Cascade)
+  chartTypeId Int
+  title       String
+  subtitle    String
+  geojson     Geojson?  @relation(fields: [geojsonId], references: [id], onDelete: SetNull)
+  geojsonId   Int?
+  intervalMs  Int?
+  intervals   Int?
+  details     Json?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  FiltersOnCharts FiltersOnCharts[]
+
+  @@map("charts")
+}
+
+model FiltersOnCharts {
+  id               Int            @id @default(autoincrement())
+  chart            Chart          @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  chartId          Int
+  filterCategory   FilterCategory @relation(fields: [filterCategoryId], references: [id], onDelete: Cascade)
+  filterCategoryId Int
+  filterType       FilterType     @relation(fields: [filterTypeId], references: [id], onDelete: Cascade)
+  filterTypeId     Int
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@unique([chartId, filterCategoryId, filterTypeId])
+  @@map("filters_on_charts")
+}
+
+model SpatialType {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  GeoTypes Geo[]
+
+  Dataset Dataset[]
+  @@map("spatial_types")
+}
+
+model Geo {
+  id            Int         @id @default(autoincrement())
+  name          String
+  displayName   String?
+  code          String      @unique
+  abbreviation  String?
+  geometry      String      @db.Text
+  Parent        Geo?        @relation("GeoToGeo", fields: [parentId], references: [id], onDelete: SetNull)
+  parentId      Int?
+  SpatialType   SpatialType @relation(fields: [spatialTypeId], references: [id])
+  spatialTypeId Int
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  Geo       Geo[]       @relation("GeoToGeo")
+  DataValue DataValue[]
+
+  @@unique([name, code])
+  @@map("geos")
+}
+
+model Source {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  url         String
+  publishedAt DateTime?
+  retrievedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  Dataset Dataset[]
+
+  @@map("sources")
+}
+
+model TemporalType {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Dataset Dataset[]
+
+  @@map("temporal_types")
+}
+
+model Dataset {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique
+  description String?      @db.Text
+  unit        String?
+  Project     Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId   Int
+  Source      Source       @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  sourceId    Int
+  Temporal    TemporalType @relation(fields: [temporalId], references: [id], onDelete: Cascade)
+  temporalId  Int          @default(1)
+  Spatial     SpatialType  @relation(fields: [spatialId], references: [id], onDelete: Cascade)
+  spatialId   Int          @default(1)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  Variable       Variable[]
+  Chart          Chart[]
+  TagsOnDatasets TagsOnDatasets[]
+  Dashboard      Dashboard[]
+
+  @@map("datasets")
+}
+
+model RacialGroup {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  displayName String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+
+  DataValue DataValue[]
+
+  @@map("racial_groups")
+}
+
+model Gender {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  displayName String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+
+  DataValue DataValue[]
+
+  @@map("genders")
+}
+
+model Variable {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?  @db.Text
+  displayName String?
+  dataset     Dataset  @relation(fields: [datasetId], references: [id], onDelete: Cascade)
+  datasetId   Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  DataValue DataValue[]
+
+  @@map("variables")
+}
+
+model DataValue {
+  id            Int          @id @default(autoincrement())
+  value         Float
+  date          Int
+  Geo           Geo          @relation(fields: [geoId], references: [id], onDelete: Cascade)
+  geoId         Int
+  variable      Variable     @relation(fields: [variableId], references: [id], onDelete: Cascade)
+  variableId    Int
+  RacialGroup   RacialGroup? @relation(fields: [racialGroupId], references: [id], onDelete: Cascade)
+  racialGroupId Int?
+  Genders       Gender?      @relation(fields: [genderId], references: [id])
+  genderId      Int?
+  details       Json?
+
+  @@map("data_values")
+}
+
+model Infographic {
+  id            Int          @id @default(autoincrement())
+  name          String       @unique
+  displayName   String?
+  s3Key         String
+  Category      Category?    @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  categoryId    Int?
+  Subcategory   Subcategory? @relation(fields: [subcategoryId], references: [id], onDelete: SetNull)
+  subcategoryId Int?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@map("infographics")
+}
+
+model Tag {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  displayName String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  TagsOnDatasets TagsOnDatasets[]
+
+  @@map("tags")
+}
+
+model TagsOnDatasets {
+  id        Int      @id @default(autoincrement())
+  dataset   Dataset  @relation(fields: [datasetId], references: [id], onDelete: Cascade)
+  datasetId Int
+  Tag       Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([datasetId, tagId])
+  @@map("tags_on_datasets")
+}
+
+model Dashboard {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  dataset   Dataset  @relation(fields: [datasetId], references: [id], onDelete: Cascade)
+  datasetId Int
+  blocks    Json
+  gridProps Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("dashboards")
+}
