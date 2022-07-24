@@ -11,13 +11,15 @@ export function writeFiles(
   { schema, models, ...rest }: ReturnObj,
   options: SafeOptions,
 ): void {
-  writeSafe(
-    `${options.header}${TS_UTILITIES}`,
-    'utilities.ts',
-    options.dest,
-    schema.name,
-    'types',
-  )
+  options.internalFileTypes.forEach((ext) => {
+    writeSafe(
+      `${options.header}${TS_UTILITIES}`,
+      `utilities.${ext}`,
+      options.dest,
+      schema.name,
+      'types',
+    )
+  })
   models.forEach(({ templates }) =>
     Object.values(templates).forEach((model) => {
       const { location, fileName, ...files } = model
@@ -44,19 +46,19 @@ export function writeFiles(
       )
     })
   })
-  const { server, client } = createIndexes(
+  const { server, client, types } = createIndexes(
     resolve(options.dest, schema.name),
     options,
   )
   if (options.tscClient) {
-    compiler(client, `${schema.name}/client`, options)
+    compiler([...client, ...types], `${schema.name}/client`, options)
   }
   if (options.tscServer) {
-    compiler(server, `${schema.name}/server`, options)
+    compiler([...server, ...types], `${schema.name}/server`, options)
   }
   if (!options.fileTypes.includes('ts')) {
     console.log('Removing TS files')
-    ;[...client, ...server].forEach((fileName) => {
+    ;[...client, ...server, ...types].forEach((fileName) => {
       if (fs.existsSync(fileName)) {
         fs.unlinkSync(fileName)
       }

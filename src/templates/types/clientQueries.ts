@@ -6,7 +6,7 @@ export function clientQueries(
   ext: Extension,
 ): string {
   return {
-    'd.ts': `import type { ${model.name} as ${schema.pascal}${model.name} } from '@prisma/client/rdt';
+    'd.ts': `import type { ${model.name} as ${schema.pascal}${model.name} } from '${schema.output}';
 import type { GqlTypename, GqlQuery } from './utilities';
 
 export declare type Gql${model.name} = GqlTypename<${schema.pascal}${model.name}, '${model.camelPlural}'>;

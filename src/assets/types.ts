@@ -21,7 +21,7 @@ export interface ReturnObj {
   context: FileTypes
 }
 
-export type TsFiles = { server: string[]; client: string[] }
+export type TsFiles = { server: string[]; client: string[]; types: string[] }
 
 export type ValidType = typeof VALID_TYPES[number] | ''
 

@@ -6,6 +6,7 @@ import { writeSafe } from './writeSafe'
 
 function getFiles(path: string, opt: SafeOptions, tsFiles: TsFiles): void {
   const isServer = path.includes('server')
+  const isClient = path.includes('client')
   const files = [
     ...new Set(
       fs
@@ -23,14 +24,18 @@ function getFiles(path: string, opt: SafeOptions, tsFiles: TsFiles): void {
         files.forEach((file) => {
           if (isServer) {
             tsFiles.server.push(resolve(path, `${file}.ts`))
-          } else {
+          } else if (isClient) {
             tsFiles.client.push(resolve(path, `${file}.ts`))
+          } else {
+            tsFiles.types.push(resolve(path, `${file}.ts`))
           }
         })
-        if (path.includes('server')) {
+        if (isServer) {
           tsFiles.server.push(resolve(path, 'index.ts'))
-        } else {
+        } else if (isClient) {
           tsFiles.client.push(resolve(path, 'index.ts'))
+        } else {
+          tsFiles.types.push(resolve(path, 'index.ts'))
         }
       }
       if (path.includes('server') && ext === 'js') {
@@ -51,7 +56,7 @@ function getFiles(path: string, opt: SafeOptions, tsFiles: TsFiles): void {
 export function createIndexes(
   path: string,
   options: SafeOptions,
-  tsFiles: TsFiles = { server: [], client: [] },
+  tsFiles: TsFiles = { server: [], client: [], types: [] },
 ): TsFiles {
   if (fs.existsSync(path)) {
     const folders = fs
