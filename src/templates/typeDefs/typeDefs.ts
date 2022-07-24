@@ -1,7 +1,16 @@
-import { ES5_BINDING, ES5_IMPORT, ES5_MODULE, ES5_SET_DEFAULT } from '../../assets/constants'
+import {
+  ES5_BINDING,
+  ES5_IMPORT,
+  ES5_MODULE,
+  ES5_SET_DEFAULT,
+} from '../../assets/constants'
 import type { ModelTemplate, Schema, Extension } from '../../assets/types'
 
-export function allTypeDefs(schema: Schema, models: ModelTemplate[], ext: Extension): string {
+export function allTypeDefs(
+  schema: Schema,
+  models: ModelTemplate[],
+  ext: Extension,
+): string {
   return {
     'd.ts': `export declare const typeDefs: import("graphql").DocumentNode;\n`,
     js: `"use strict";
@@ -21,11 +30,21 @@ exports.typeDefs = (0, apollo_server_core_1.gql) \`
   ${schema.hasDate ? 'scalar DateTime' : ''}
 
   type Query {
-    ${models.map((model) => `${model.camel}(${model.pKey}: ${model.pType}): [${model.name}]\n    ${model.camelPlural}: [${model.name}]`).join('\n    ')}
+    ${models
+      .map(
+        (model) =>
+          `${model.camel}(${model.pKey}: ${model.pType}): [${model.name}]\n    ${model.camelPlural}: [${model.name}]`,
+      )
+      .join('\n    ')}
   }
 
   type Mutation {
-    ${models.map((model) => `edit${model.pascalPlural}(incoming: [${model.name}Input], deleting: Boolean): [${model.name}]`).join('\n    ')}
+    ${models
+      .map(
+        (model) =>
+          `edit${model.pascalPlural}(incoming: [${model.name}Input], deleting: Boolean): [${model.name}]`,
+      )
+      .join('\n    ')}
   }
 \`;
 `,
@@ -37,13 +56,25 @@ export const typeDefs = gql\`
   \${queries}
   \${mutations}
 
-${schema.hasJson ? 'scalar JSON\n' : ''}${schema.hasDate ? '  scalar DateTime\n' : ''}
+${schema.hasJson ? 'scalar JSON\n' : ''}${
+      schema.hasDate ? '  scalar DateTime\n' : ''
+    }
   type Query {
-    ${models.map(({ camel, camelPlural, pascal }) => `${camel}: ${pascal}\n    ${camelPlural}: [${pascal}]`).join('\n    ')}
+    ${models
+      .map(
+        ({ camel, camelPlural, pascal }) =>
+          `${camel}: ${pascal}\n    ${camelPlural}: [${pascal}]`,
+      )
+      .join('\n    ')}
   }
 
   type Mutation {
-    ${models.map(({ pascal, pascalPlural }) => `edit${pascalPlural}(incoming: [${pascal}Input], deleting: Boolean): [${pascal}]`).join('\n    ')}
+    ${models
+      .map(
+        ({ pascal, pascalPlural }) =>
+          `edit${pascalPlural}(incoming: [${pascal}Input], deleting: Boolean): [${pascal}]`,
+      )
+      .join('\n    ')}
   }
 \`
 `,

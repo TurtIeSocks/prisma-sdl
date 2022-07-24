@@ -40,21 +40,27 @@
     "fix": "eslint \"**/*.{ts,tsx}\" --fix && prettier --write \"**/*.{ts,tsx}\""
   },
   "devDependencies": {
+    "@apollo/client": "^3.0.0",
     "@types/node": "^18.0.6",
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",
+    "apollo-server-core": "^3.0.0",
     "eslint": "^8.13.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-plugin-import": "^2.24.2",
+    "graphql": "^16.0.0",
+    "graphql-scalars": "^1.14.1",
     "prettier": "^2.4.0",
     "ts-node": "^10.5.0",
     "typescript": "^4.4.3"
   },
   "peerDependencies": {
-    "@apollo/client": "^3.6.9",
-    "apollo-server-core": "^3.10.0",
-    "graphql-scalars": "^1.14.1"
+    "@apollo/client": "^3.0.0",
+    "apollo-server-core": "^3.0.0",
+    "graphql": "^16.0.0",
+    "graphql-scalars": "^1.14.1",
+    "typescript": "^4.0.0"
   },
   "peerDependenciesMeta": {
     "@apollo/client": {
@@ -63,7 +69,13 @@
     "apollo-server-core": {
       "optional": true
     },
+    "graphql": {
+      "optional": true
+    },
     "graphql-scalars": {
+      "optional": true
+    },
+    "typescript": {
       "optional": true
     }
   }

@@ -5,6 +5,12 @@ export interface Options {
   dest?: string
   header?: string
   fileTypes?: Extension[]
+  tscClient?: string
+  tscServer?: string
+}
+
+export interface SafeOptions extends Required<Options> {
+  internalFileTypes: Extension[]
 }
 
 export interface ReturnObj {
@@ -14,6 +20,8 @@ export interface ReturnObj {
   typeDefs: FileTypes
   context: FileTypes
 }
+
+export type TsFiles = { server: string[]; client: string[] }
 
 export type ValidType = typeof VALID_TYPES[number] | ''
 

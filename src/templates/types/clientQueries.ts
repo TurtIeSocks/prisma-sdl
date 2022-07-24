@@ -1,11 +1,13 @@
 import type { Model, Schema, Extension } from '../../assets/types'
 
-export function clientQueries(schema: Schema, model: Model, singleMode: boolean, ext: Extension): string {
-  const utilPath = singleMode ? '../utilTypes' : '../../utilTypes'
-
+export function clientQueries(
+  schema: Schema,
+  model: Model,
+  ext: Extension,
+): string {
   return {
     'd.ts': `import type { ${model.name} as ${schema.pascal}${model.name} } from '@prisma/client/rdt';
-import type { GqlTypename, GqlQuery } from '${utilPath}';
+import type { GqlTypename, GqlQuery } from './utilities';
 
 export declare type Gql${model.name} = GqlTypename<${schema.pascal}${model.name}, '${model.camelPlural}'>;
 export declare type Gql${model.name}Var = {
@@ -21,7 +23,7 @@ export { ${schema.pascal}${model.name} };
 // ${model.namePlural}
 // ==============================================================
 import type { ${model.name} as ${schema.pascal}${model.name} } from '${schema.output}'
-import type { GqlTypename, GqlQuery } from '${utilPath}'
+import type { GqlTypename, GqlQuery } from './utilities'
 
 export type Gql${model.name} = GqlTypename<${schema.pascal}${model.name}, '${model.camelPlural}'>
 
