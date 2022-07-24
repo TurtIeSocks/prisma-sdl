@@ -54,12 +54,12 @@ export function writeFiles(
   if (options.tscServer) {
     compiler(server, `${schema.name}/server`, options)
   }
-  // if (!options.fileTypes.includes('ts')) {
-  //   server.forEach((fileName) => {
-  //     fs.unlinkSync(fileName)
-  //   })
-  //   client.forEach((fileName) => {
-  //     fs.unlinkSync(fileName)
-  //   })
-  // }
+  if (!options.fileTypes.includes('ts')) {
+    console.log('Removing TS files')
+    ;[...client, ...server].forEach((fileName) => {
+      if (fs.existsSync(fileName)) {
+        fs.unlinkSync(fileName)
+      }
+    })
+  }
 }
