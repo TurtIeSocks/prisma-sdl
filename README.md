@@ -191,7 +191,7 @@ Respective exported names are commented for reference
 │   │   │   ├── foo.ts // foo
 │   │   │   ├── bar.ts // bar
 │   │   │   └── index.ts
-│   │   └── queries
+│   │   └── queryAll
 │   │       ├── foos.ts // foos
 │   │       ├── bars.ts // bars
 │   │       └── index.ts
@@ -203,9 +203,7 @@ Respective exported names are commented for reference
 │       │   └── index.ts
 │       └── queries
 │           ├── FOO.ts // FOO
-│           ├── FOOS.ts // FOOS
 │           ├── BAR.ts // BAR
-│           ├── BARS.ts // BARS
 │           └── index.ts
 └── types
     ├── foos.ts // GqlFoo, GqlQFoos, GqlMFoos, GqlFooVar

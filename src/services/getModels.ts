@@ -22,7 +22,7 @@ export function getModels(
   singleMode: boolean,
   fileTypes: Extension[],
 ): ModelTemplate[] {
-  const models = (schema.schema.match(/.+{([^}]*)}/g) || [])
+  const models: ModelTemplate[] = (schema.schema.match(/.+{([^}]*)}/g) || [])
     .filter(
       (model) =>
         model.startsWith('model') && !model.split(' ')[1]?.endsWith('s'),
@@ -130,7 +130,7 @@ export function getModels(
               ]),
             ),
           },
-          clientAllQuery: {
+          clientQueryAll: {
             fileName: cleanModel.screamingSnakePlural,
             location: 'client/queryAll',
             ...Object.fromEntries(
@@ -140,7 +140,7 @@ export function getModels(
               ]),
             ),
           },
-          clientOneQuery: {
+          clientQueryOne: {
             fileName: cleanModel.screamingSnake,
             location: 'client/queryOne',
             ...Object.fromEntries(

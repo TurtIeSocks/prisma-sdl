@@ -82,8 +82,8 @@ export interface ModelTemplate extends Model {
     serverMut: ModelFile
     serverTdQueries: ModelFile
     serverTdMut: ModelFile
-    clientAllQuery: ModelFile
-    clientOneQuery: ModelFile
+    clientQueryAll: ModelFile
+    clientQueryOne: ModelFile
     clientMut: ModelFile
     hookAll: ModelFile
     hookOne: ModelFile
