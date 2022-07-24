@@ -1,5 +1,7 @@
 # Prisma SDL
 
+[![npm version](https://badge.fury.io/js/prisma-sdl.svg)](https://badge.fury.io/js/prisma-sdl)
+
 ## Features
 
 - TypeScript friendly
