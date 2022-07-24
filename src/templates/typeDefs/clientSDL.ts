@@ -1,6 +1,11 @@
 import type { Model, Extension } from '../../assets/types'
 
-export function clientSDL(model: Model, mutation: boolean, all: boolean, ext: Extension): string {
+export function clientSDL(
+  model: Model,
+  mutation: boolean,
+  all: boolean,
+  ext: Extension,
+): string {
   const props = model.properties.map((x) => x.name).join('\n      ')
   const tsJs = `import { gql } from '@apollo/client'
 ${
@@ -11,7 +16,8 @@ ${
       ${props}
     }
   }
-\``
+\`
+`
     : all
     ? `export const ${model.screamingSnakePlural} = gql\`
   query ${model.camelPlural} {
@@ -32,7 +38,11 @@ ${
 }`
   return {
     'd.ts': `export declare const ${
-      mutation ? `EDIT_${model.screamingSnakePlural}` : all ? model.screamingSnakePlural : model.screamingSnake
+      mutation
+        ? `EDIT_${model.screamingSnakePlural}`
+        : all
+        ? model.screamingSnakePlural
+        : model.screamingSnake
     }: import("@apollo/client").DocumentNode;`,
     js: tsJs,
     ts: tsJs,

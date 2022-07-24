@@ -2,4 +2,3 @@ node_modules
 .turbo
 yarn.lock
 dist
-generated

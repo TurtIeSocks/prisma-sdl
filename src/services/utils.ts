@@ -2,12 +2,16 @@ import { REGEX } from '../assets/constants'
 import type { Base, ValidType } from '../assets/types'
 
 export function toCamelCase(str: string): string {
-  const s = ((str && str.match(REGEX)) || []).map((x) => x.slice(0, 1).toUpperCase() + x.slice(1).toLowerCase()).join('')
+  const s = ((str && str.match(REGEX)) || [])
+    .map((x) => x.slice(0, 1).toUpperCase() + x.slice(1).toLowerCase())
+    .join('')
   return s.slice(0, 1).toLowerCase() + s.slice(1)
 }
 
 export function pascalCase(str: string): string {
-  return ((str && str.match(REGEX)) || []).map((x) => x.charAt(0).toUpperCase() + x.slice(1).toLowerCase()).join('')
+  return ((str && str.match(REGEX)) || [])
+    .map((x) => x.charAt(0).toUpperCase() + x.slice(1).toLowerCase())
+    .join('')
 }
 
 export function toSnakeCase(str: string): string {

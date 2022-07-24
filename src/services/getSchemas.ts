@@ -4,16 +4,20 @@ import { join } from 'path'
 import type { Schema } from '../assets/types'
 import { getConventions } from './utils'
 
-export function search(startPath: string, found: string[] = []): string[] {
+export function search(
+  startPath: string,
+  input: string,
+  found: string[] = [],
+): string[] {
   if (!fs.existsSync(startPath)) return found
 
   fs.readdirSync(startPath).forEach((file) => {
     const filename = join(startPath, file)
     const stat = fs.lstatSync(filename)
     if (stat.isDirectory()) {
-      search(filename, found)
-    } else if (filename.endsWith('schema.prisma') && !filename.includes('node_modules')) {
-      console.log('Found schema:', filename)
+      search(filename, input, found)
+    } else if (filename.endsWith(input) && !filename.includes('node_modules')) {
+      console.log('Found:', filename)
       found.push(filename)
     }
   })
@@ -21,7 +25,7 @@ export function search(startPath: string, found: string[] = []): string[] {
 }
 
 export function getSchemas(root: string): Schema[] {
-  const schemas = search(root)
+  const schemas = search(root, 'schema.prisma')
   let fallback = 'a'
   return schemas.map((path, i) => {
     const schema = fs.readFileSync(path).toString()
@@ -42,7 +46,9 @@ export function getSchemas(root: string): Schema[] {
     if (!name) {
       console.warn('Name not found for schema', path)
     }
-    fallback = i ? String.fromCharCode(fallback.charCodeAt(fallback.length - 1) + 1) : fallback
+    fallback = i
+      ? String.fromCharCode(fallback.charCodeAt(fallback.length - 1) + 1)
+      : fallback
 
     return {
       ...getConventions(name || (schemas.length > 1 ? fallback : '')),

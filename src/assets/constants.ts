@@ -1,9 +1,17 @@
-export const VALID_TYPES = ['Boolean', 'DateTime', 'Float', 'Int', 'JSON', 'String'] as const
+export const VALID_TYPES = [
+  'Boolean',
+  'DateTime',
+  'Float',
+  'Int',
+  'JSON',
+  'String',
+] as const
 
-export const REGEX = /[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g
+export const REGEX =
+  /[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g
 
 export const TS_UTILITIES = `// ==============================================================
-// Utility classes
+// Utility Types
 
 // Adds the __typename property to the incoming GQL query
 export type GqlTypename<T, U = string> = T & { __typename: U }
