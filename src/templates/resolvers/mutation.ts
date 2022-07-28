@@ -1,78 +1,56 @@
-import { ES5_MODULE } from '../../assets/constants'
-import type { Model, Schema, Extension } from '../../assets/types'
+import type { Extension } from '../../assets/types'
 
-export function mutation(
-  schema: Schema,
-  model: Model,
-  singleMode: boolean,
-  ext: Extension,
-): string {
-  const autos = model.properties
-    .filter((prop) => prop.auto)
-    .map((x) => x.name)
-    .join(', ')
-  const modelHasJson = model.properties.some((prop) => prop.type === 'JSON')
-  const context = singleMode ? 'prisma' : `${schema.camel}Client: prisma`
-
+export function mutation(ext: Extension): string {
   return {
     js: `'use strict'
-${ES5_MODULE}
-exports.edit${model.pascalPlural} = void 0
-async function edit${model.pascalPlural}(
+{{es5_module}}
+exports.edit{{model_pascalPlural}} = void 0
+async function edit{{model_pascalPlural}}(
   _parent,
   { incoming, deleting },
-  { ${context} },
+  { {{resolvers_context}} },
 ) {
   if (deleting) {
-    await prisma.${model.camel}.deleteMany({
-      where: { ${model.pKey}: { in: incoming.map((x) => x.${model.pKey}) } },
+    await prisma.{{model_camel}}.deleteMany({
+      where: { {{model_pKey}}: { in: incoming.map((x) => x.{{model_pKey}}) } },
     })
-    return incoming.map((x) => ({ ${model.pKey}: x.${model.pKey} }))
+    return incoming.map((x) => ({ {{model_pKey}}: x.{{model_pKey}} }))
   }
   return Promise.all(
     incoming.map(async (x) => {
-      const { ${model.pKey}, ${autos ? `${autos}, ` : ''}...properties } = x
-      return prisma.${model.camel}.upsert({
-        where: { ${model.pKey} },
+      const { {{model_pKey}}, {{model_autos}}...properties } = x
+      return prisma.{{model_camel}}.upsert({
+        where: { {{model_pKey}} },
         create: properties,
         update: properties,
       })
     }),
   )
 }
-exports.edit${model.pascalPlural} = edit${model.pascalPlural}
+exports.edit{{model_pascalPlural}} = edit{{model_pascalPlural}}
 `,
     ts: `import type { Context } from '../../context'
-import type { ${schema.pascal}${model.pascal}${
-      modelHasJson ? ', JsonSafe' : ''
-    } } from '../../../types'
+import type { {{schema_pascal}}{{model_pascal}}{{model_json_safe_import}} } from '../../../types'
 
-export async function edit${model.pascalPlural}(
+export async function edit{{model_pascalPlural}}(
   _parent: unknown,
   {
     incoming,
     deleting,
-  }: { incoming: ${
-    modelHasJson
-      ? `JsonSafe<${schema.pascal}${model.pascal}, ${model.properties
-          .filter((x) => x.type === 'JSON')
-          .map((x) => `'${x.name}'`)
-          .join(' | ')}>`
-      : `${schema.pascal}${model.pascal}`
-  }[]; deleting: boolean },
-  { ${context} }: Context,
-): Promise<Pick<${schema.pascal}${model.pascal}, '${model.pKey}'>[]> {
+  }: { incoming: {{model_json_props}}[]; deleting: boolean },
+  { {{resolvers_context}} }: Context,
+): Promise<Pick<{{schema_pascal}}{{model_pascal}}, '{{model_pKey}}'>[]> {
   if (deleting) {
-    await prisma.${model.camel}.deleteMany({
-      where: { ${model.pKey}: { in: incoming.map((x) => x.${model.pKey}) } },
+    await prisma.{{model_camel}}.deleteMany({
+      where: { {{model_pKey}}: { in: incoming.map((x) => x.{{model_pKey}}) } },
     })
-    return incoming.map((x) => ({ ${model.pKey}: x.${model.pKey} }))
+    return incoming.map((x) => ({ {{model_pKey}}: x.{{model_pKey}} }))
   }
   return Promise.all(
     incoming.map(async (x) => {
-      const { ${model.pKey}, ${autos ? `${autos}, ` : ''}...properties } = x
-      return prisma.${model.camel}.upsert({
-        where: { ${model.pKey} },
+      const { {{model_pKey}}, {{model_autos}}...properties } = x
+      return prisma.{{model_camel}}.upsert({
+        where: { {{model_pKey}} },
         create: properties,
         update: properties,
       })
@@ -81,27 +59,18 @@ export async function edit${model.pascalPlural}(
 }
 `,
     'd.ts': `import type { Context } from '../../context'
-import type { ${schema.pascal}${model.pascal}${
-      modelHasJson ? ', JsonSafe' : ''
-    } } from '../../../types'
-export declare function edit${model.pascalPlural}(
+import type { {{schema_pascal}}{{model_pascal}}{{model_json_safe_import}} } from '../../../types'
+export declare function edit{{model_pascalPlural}}(
   _parent: unknown,
   {
     incoming,
     deleting,
   }: {
-    incoming: ${
-      modelHasJson
-        ? `JsonSafe<${schema.pascal}${model.pascal}, ${model.properties
-            .filter((x) => x.type === 'JSON')
-            .map((x) => `'${x.name}'`)
-            .join(' | ')}`
-        : `${schema.pascal}${model.pascal}`
-    }>[]
+    incoming: {{model_json_props}}[]
     deleting: boolean
   },
-  { ${context} }: Context,
-): Promise<Pick<${schema.pascal}${model.pascal}, '${model.pKey}'>[]>
+  { {{resolvers_context}} }: Context,
+): Promise<Pick<{{schema_pascal}}{{model_pascal}}, '{{model_pKey}}'>[]>
 `,
   }[ext]
 }

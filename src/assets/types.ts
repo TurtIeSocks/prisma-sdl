@@ -76,18 +76,5 @@ export interface Model extends Base {
 }
 
 export interface ModelTemplate extends Model {
-  templates: {
-    serverQueryAll: ModelFile
-    serverQueryOne: ModelFile
-    serverMut: ModelFile
-    serverTdQueries: ModelFile
-    serverTdMut: ModelFile
-    clientQueryAll: ModelFile
-    clientQueryOne: ModelFile
-    clientMut: ModelFile
-    hookAll: ModelFile
-    hookOne: ModelFile
-    hookMut: ModelFile
-    tsTypes: ModelFile
-  }
+  templates: { [key: string]: ModelFile }
 }

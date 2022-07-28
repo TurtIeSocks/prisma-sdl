@@ -198,8 +198,8 @@ Respective exported names are commented for reference
 │   └── typeDefs
 │       ├── typeDefs.ts // typeDefs
 │       ├── mutations
-│       │   ├── FOOS_INPUT.ts // FOOS_INPUT
-│       │   ├── BARS_INPUT.ts // BARS_INPUT
+│       │   ├── FOO_INPUT.ts // FOO_INPUT
+│       │   ├── BAR_INPUT.ts // BAR_INPUT
 │       │   └── index.ts
 │       └── queries
 │           ├── FOO.ts // FOO

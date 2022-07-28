@@ -1,73 +1,32 @@
-import {
-  ES5_BINDING,
-  ES5_IMPORT,
-  ES5_SET_DEFAULT,
-  ES5_MODULE,
-} from '../../assets/constants'
-import type { ModelTemplate, Schema, Extension } from '../../assets/types'
+import type { Extension } from '../../assets/types'
 
-export function allResolvers(
-  schema: Schema,
-  models: ModelTemplate[],
-  singleMode: boolean,
-  ext: Extension,
-): string {
-  const context = singleMode ? 'prisma' : `${schema.camel}Client: prisma`
-
+export function allResolvers(ext: Extension): string {
   return {
     'd.ts': `export declare const resolvers: {
-  ${
-    schema.hasJson
-      ? `JSON: import("graphql").GraphQLScalarType<unknown, unknown>;`
-      : ''
-  }
-  ${
-    schema.hasDate
-      ? `DateTime: import("graphql").GraphQLScalarType<unknown, unknown>;`
-      : ''
-  }
+
+  {{resolvers_has_json_dts}}
+  {{resolvers_has_date_dts}}
   Query: {
-    ${models
-      .map(
-        (
-          model,
-        ) => `${model.camelPlural}: (_parent: unknown, _args: unknown, { ${context} }: import("..").Context) => Promise<import("${schema.output}").${model.name}[]>;
-    ${model.camel}: (_parent: unknown, { ${model.pKey} }: { ${model.pKey}: ${model.pType}; }, { ${context} }: import("..").Context) => Promise<import("${schema.output}").${model.name} | null>;
-`,
-      )
-      .join('      ')}  
+    {{resolvers_type_query}}
   },
   Mutation: {
-    ${models
-      .map(
-        (
-          model,
-        ) => `${model.camelPlural}: (_parent: unknown, { incoming, deleting }: {
-      incoming: import("${schema.output}").${model.name}[]; 
-      deleting: boolean; 
-    }, { ${context} }: import("..").Context) => Promise<import("${schema.output}").${model.name}[] | Pick<import("${schema.output}").${model.name}, "${model.pKey}">[]>;`,
-      )
-      .join('\n      ')}
+    {{resolvers_type_mutation}}
   }
 };
 `,
     js: `"use strict";
-${ES5_BINDING}
-${ES5_SET_DEFAULT}
-${ES5_IMPORT}
-${ES5_MODULE}
+{{es5_binding}}
+{{es5_set_default}}
+{{es5_import}}
+{{es5_module}}
 exports.resolvers = void 0;
-${
-  schema.hasJson || schema.hasDate
-    ? 'const graphql_scalars_1 = require("graphql-scalars");'
-    : ''
-}
+{{resolvers_scalar_import_js}}
 const queryOne = __importStar(require("./queryOne"));
 const queryAll = __importStar(require("./queryAll"));
 const Mutation = __importStar(require("./mutations"));
 exports.resolvers = {
-    ${schema.hasJson ? 'JSON: graphql_scalars_1.GraphQLJSON,' : ''}
-    ${schema.hasDate ? 'Date: graphql_scalars_1.GraphQLDateTime,' : ''}
+    {{resolvers_has_json_js}}
+    {{resolvers_has_date_js}}
     Query: {
       ...queryOne,
       ...queryAll,
@@ -75,21 +34,15 @@ exports.resolvers = {
     Mutation,
 };
 `,
-    ts: `${
-      schema.hasDate || schema.hasJson
-        ? `import { ${schema.hasDate ? 'GraphQLDateTime' : ''}${
-            schema.hasDate && schema.hasJson ? ',' : ''
-          }${schema.hasJson ? ' GraphQLJSON' : ''} } from 'graphql-scalars'`
-        : ''
-    }
+    ts: `{{resolvers_scalar_import_ts}}
 import * as queryOne from './queryOne'
 import * as queryAll from './queryAll'
 import * as mutations from './mutations'
 
 export const resolvers = {
-  ${schema.hasJson ? 'JSON: GraphQLJSON,\n' : ''}${
-      schema.hasDate ? '  DateTime: GraphQLDateTime,\n' : ''
-    }  Query: {
+  {{resolvers_has_json_ts}}
+  {{resolvers_has_date_ts}}
+  Query: {
     ...queryOne,
     ...queryAll,
   },

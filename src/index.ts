@@ -1,5 +1,6 @@
 import { getModels } from './services/getModels'
 import { getSchemas } from './services/getSchemas'
+import { templater } from './services/templater'
 import { writeFiles } from './services/writeFiles'
 import { gqlContext } from './templates/context/context'
 import { allResolvers } from './templates/resolvers/resolvers'
@@ -38,14 +39,20 @@ export function prismaSdl({
       resolvers: Object.fromEntries(
         internalFileTypes.map((ext) => [
           ext,
-          allResolvers(schema, models, singleMode, ext),
+          templater(allResolvers(ext), schema, singleMode, models),
         ]),
       ),
       typeDefs: Object.fromEntries(
-        internalFileTypes.map((ext) => [ext, allTypeDefs(schema, models, ext)]),
+        internalFileTypes.map((ext) => [
+          ext,
+          templater(allTypeDefs(ext), schema, singleMode, models),
+        ]),
       ),
       context: Object.fromEntries(
-        internalFileTypes.map((ext) => [ext, gqlContext(schema, singleMode, ext)]),
+        internalFileTypes.map((ext) => [
+          ext,
+          templater(gqlContext(ext), schema, singleMode, models),
+        ]),
       ),
     }
   })

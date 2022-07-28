@@ -1,54 +1,36 @@
-import { ES5_MODULE } from '../../assets/constants'
-import type { Schema, Extension } from '../../assets/types'
+import type { Extension } from '../../assets/types'
 
-export function gqlContext(
-  schema: Schema,
-  singleMode: boolean,
-  ext: Extension,
-): string {
-  const importStatement = singleMode
-    ? 'PrismaClient'
-    : `PrismaClient as ${schema.pascal}Client`
+export function gqlContext(ext: Extension): string {
   return {
-    'd.ts': `import { ${importStatement} } from '${schema.output}'
+    'd.ts': `import { {{context_import_statement}} } from '{{schema_output}}'
 export declare type Context = {
-  ${singleMode ? 'prisma' : `${schema.camel}Client`}: ${
-      singleMode ? 'prisma' : `${schema.pascal}Client`
-    }
+  {{context_context}}: {{context_context_pascal}}
 }
 export declare const context: {
-  ${singleMode ? 'prisma' : `${schema.camel}Client`}: ${
-      singleMode ? 'prisma' : `${schema.pascal}Client`
-    }<
-    import('${schema.output}').Prisma.PrismaClientOptions,
+  {{context_context}}: {{context_context_pascal}}<
+    import('{{schema_output}}').Prisma.PrismaClientOptions,
     never,
-    | import('${schema.output}').Prisma.RejectOnNotFound
-    | import('${schema.output}').Prisma.RejectPerOperation
+    | import('{{schema_output}}').Prisma.RejectOnNotFound
+    | import('{{schema_output}}').Prisma.RejectPerOperation
   >
 }
 `,
     js: `"use strict";
-${ES5_MODULE}
+{{es5_module}}
 exports.context = void 0;
-const ${schema.camel}_1 = require("${schema.output}");
+const {{schema_camel}}_1 = require("{{schema_output}}");
 exports.context = {
-    ${
-      singleMode ? 'prisma' : `${schema.camel}Client`
-    }: new ${schema.camel}_1.PrismaClient(),
+    {{context_context}}: new {{schema_camel}}_1.PrismaClient(),
 };
 `,
-    ts: `import { ${importStatement} } from '${schema.output}'
+    ts: `import { {{context_import_statement}} } from '{{schema_output}}'
 
 export type Context = {
-  ${singleMode ? 'prisma' : `${schema.camel}Client`}: ${
-      singleMode ? 'prisma' : `${schema.pascal}Client`
-    }
+  {{context_context}}: {{context_context_pascal}}
 }
 
 export const context = {
-  ${singleMode ? 'prisma' : `${schema.camel}Client`}: new ${
-      singleMode ? 'prisma' : `${schema.pascal}Client`
-    }(),
+  {{context_context}}: new {{context_context_pascal}}(),
 }
 `,
   }[ext]
