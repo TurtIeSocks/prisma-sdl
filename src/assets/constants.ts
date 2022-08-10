@@ -1,3 +1,5 @@
+import type { Base, Schema, Model } from './types'
+
 export const VALID_TYPES = [
   'Boolean',
   'DateTime',
@@ -9,6 +11,35 @@ export const VALID_TYPES = [
 
 export const REGEX =
   /[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g
+
+export const KEYS: (keyof Base)[] = [
+  'name',
+  'namePlural',
+  'camel',
+  'camelPlural',
+  'upper',
+  'upperPlural',
+  'lower',
+  'lowerPlural',
+  'pascal',
+  'pascalPlural',
+  'snake',
+  'snakePlural',
+  'screamingSnake',
+  'screamingSnakePlural',
+]
+
+export const SCHEMA_KEYS: (keyof Omit<Schema, keyof Base>)[] = [
+  'hasDate',
+  'hasJson',
+  'output',
+]
+export const MODEL_KEYS: (keyof Omit<Model, keyof Base>)[] = [
+  'pKey',
+  'pType',
+  'pGqlType',
+  'properties',
+]
 
 export const TS_UTILITIES = `// ==============================================================
 // Utility Types

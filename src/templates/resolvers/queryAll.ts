@@ -1,39 +1,31 @@
-import { ES5_MODULE } from '../../assets/constants'
-import type { Model, Schema, Extension } from '../../assets/types'
+import type { Extension } from '../../assets/types'
 
-export function queryAll(
-  schema: Schema,
-  model: Model,
-  singleMode: boolean,
-  ext: Extension,
-): string {
-  const context = singleMode ? 'prisma' : `${schema.camel}Client: prisma`
-
+export function queryAll(ext: Extension): string {
   return {
     'd.ts': `import type { Context } from '../../context'
-import type { ${schema.pascal}${model.pascal} } from '../../../types'
-export declare function ${model.camelPlural}(
+import type { {{schema_pascal}}{{model_pascal}} } from '../../../types'
+export declare function {{model_camelPlural}}(
   _parent: unknown,
   _args: unknown,
-  { ${context} }: Context,
-): Promise<${schema.pascal}${model.pascal}[]>
+  { {{resolvers_context}} }: Context,
+): Promise<{{schema_pascal}}{{model_pascal}}[]>
 `,
     js: `'use strict'
-${ES5_MODULE}
-exports.${model.camelPlural} = void 0
-async function ${model.camelPlural}(_parent, _args, { ${context} }) {
-  return prisma.${model.camel}.findMany({ orderBy: { sid: 'asc' } })
+{{es5_module}}
+exports.{{model_camelPlural}} = void 0
+async function {{model_camelPlural}}(_parent, _args, { {{resolvers_context}} }) {
+  return prisma.{{model_camel}}.findMany({ orderBy: { {{model_pKey}}: 'asc' } })
 }
-exports.${model.camelPlural} = ${model.camelPlural}
+exports.{{model_camelPlural}} = {{model_camelPlural}}
 `,
     ts: `import type { Context } from '../../context'
-import type { ${schema.pascal}${model.pascal} } from '../../../types'
-export async function ${model.camelPlural}(
+import type { {{schema_pascal}}{{model_pascal}} } from '../../../types'
+export async function {{model_camelPlural}}(
   _parent: unknown,
   _args: unknown,
-  { ${context} }: Context,
-): Promise<${schema.pascal}${model.pascal}[]> {
-  return prisma.${model.camel}.findMany({ orderBy: { sid: 'asc' } })
+  { {{resolvers_context}} }: Context,
+): Promise<{{schema_pascal}}{{model_pascal}}[]> {
+  return prisma.{{model_camel}}.findMany({ orderBy: { {{model_pKey}}: 'asc' } })
 }
 `,
   }[ext]

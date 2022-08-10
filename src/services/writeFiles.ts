@@ -12,13 +12,11 @@ export function writeFiles(
   options: SafeOptions,
 ): void {
   options.internalFileTypes.forEach((ext) => {
-    writeSafe(
-      `${options.header}${TS_UTILITIES}`,
-      `utilities.${ext}`,
-      options.dest,
-      schema.name,
-      'types',
-    )
+    const content =
+      ext === 'js'
+        ? `${options.header}export {}`
+        : `${options.header}${TS_UTILITIES}`
+    writeSafe(content, `utilities.${ext}`, options.dest, schema.name, 'types')
   })
   models.forEach(({ templates }) =>
     Object.values(templates).forEach((model) => {
@@ -34,6 +32,7 @@ export function writeFiles(
       })
     }),
   )
+
   Object.entries(rest).forEach(([fileName, contents]) => {
     Object.entries(contents).forEach(([ext, content]) => {
       writeSafe(

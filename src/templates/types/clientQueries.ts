@@ -1,44 +1,40 @@
-import type { Model, Schema, Extension } from '../../assets/types'
+import type { Extension } from '../../assets/types'
 
-export function clientQueries(
-  schema: Schema,
-  model: Model,
-  ext: Extension,
-): string {
+export function clientQueries(ext: Extension): string {
   return {
-    'd.ts': `import type { ${model.name} as ${schema.pascal}${model.name} } from '${schema.output}';
+    'd.ts': `import type { {{model_name}} as {{schema_pascal}}{{model_name}} } from '{{schema_output}}';
 import type { GqlTypename, GqlQuery } from './utilities';
 
-export declare type Gql${model.name} = GqlTypename<${schema.pascal}${model.name}, '${model.camelPlural}'>;
-export declare type Gql${model.name}Var = {
-  ${model.pKey}: ${model.pType};
+export declare type Gql{{model_name}} = GqlTypename<{{schema_pascal}}{{model_name}}, '{{model_camelPlural}}'>;
+export declare type Gql{{model_name}}Var = {
+  {{model_pKey}}: {{model_pType}};
 };
-export declare type GqlQ${model.name} = GqlQuery<Gql${model.name}, 'category'>;
-export declare type GqlQ${model.namePlural} = GqlQuery<Gql${model.name}, '${model.camelPlural}'>;
-export declare type GqlM${model.namePlural} = GqlQuery<${schema.pascal}${model.name}, 'edit${model.namePlural}'>;
-export { ${schema.pascal}${model.name} };  
+export declare type GqlQ{{model_name}} = GqlQuery<Gql{{model_name}}, 'category'>;
+export declare type GqlQ{{model_namePlural}} = GqlQuery<Gql{{model_name}}, '{{model_camelPlural}}'>;
+export declare type GqlM{{model_namePlural}} = GqlQuery<{{schema_pascal}}{{model_name}}, 'edit{{model_namePlural}}'>;
+export { {{schema_pascal}}{{model_name}} };  
 `,
     js: `export {};\n`,
     ts: `// ==============================================================
-// ${model.namePlural}
+// {{model_namePlural}}
 // ==============================================================
-import type { ${model.name} as ${schema.pascal}${model.name} } from '${schema.output}'
+import type { {{model_name}} as {{schema_pascal}}{{model_name}} } from '{{schema_output}}'
 import type { GqlTypename, GqlQuery } from './utilities'
 
-export type Gql${model.name} = GqlTypename<${schema.pascal}${model.name}, '${model.camelPlural}'>
+export type Gql{{model_name}} = GqlTypename<{{schema_pascal}}{{model_name}}, '{{model_camelPlural}}'>
 
-export type Gql${model.name}Var = { ${model.pKey}: ${model.pType} }
+export type Gql{{model_name}}Var = { {{model_pKey}}: {{model_pType}} }
 
-// ${model.screamingSnake}
-export type GqlQ${model.name} = GqlQuery<Gql${model.name}, '${model.camel}'>
+// {{model_screamingSnake}}
+export type GqlQ{{model_name}} = GqlQuery<Gql{{model_name}}, '{{model_camel}}'>
 
-// ${model.screamingSnakePlural}
-export type GqlQ${model.namePlural} = GqlQuery<Gql${model.name}, '${model.camelPlural}'>
+// {{model_screamingSnakePlural}}
+export type GqlQ{{model_namePlural}} = GqlQuery<Gql{{model_name}}, '{{model_camelPlural}}'>
 
-// EDIT_${model.screamingSnakePlural}
-export type GqlM${model.namePlural} = GqlQuery<${schema.pascal}${model.name}, 'edit${model.pascalPlural}'>
+// EDIT_{{model_screamingSnakePlural}}
+export type GqlM{{model_namePlural}} = GqlQuery<{{schema_pascal}}{{model_name}}, 'edit{{model_pascalPlural}}'>
 
-export { ${schema.pascal}${model.name} }
+export { {{schema_pascal}}{{model_name}} }
 `,
   }[ext]
 }

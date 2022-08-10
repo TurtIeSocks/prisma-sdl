@@ -16,6 +16,7 @@ import { queryOne } from '../templates/resolvers/queryOne'
 import { serverSDL } from '../templates/typeDefs/serverSDL'
 import { getConventions, getTsType } from './utils'
 import { clientQueries } from '../templates/types/clientQueries'
+import { templater } from './templater'
 
 export function getModels(
   schema: Schema,
@@ -76,7 +77,6 @@ export function getModels(
           })
           .filter((prop) => prop.type),
       }
-
       return {
         ...cleanModel,
         templates: {
@@ -86,7 +86,7 @@ export function getModels(
             ...Object.fromEntries(
               fileTypes.map((type) => [
                 type,
-                queryAll(schema, cleanModel, singleMode, type),
+                templater(queryAll(type), schema, singleMode, [], cleanModel),
               ]),
             ),
           },
@@ -96,7 +96,7 @@ export function getModels(
             ...Object.fromEntries(
               fileTypes.map((type) => [
                 type,
-                queryOne(schema, cleanModel, singleMode, type),
+                templater(queryOne(type), schema, singleMode, [], cleanModel),
               ]),
             ),
           },
@@ -106,7 +106,7 @@ export function getModels(
             ...Object.fromEntries(
               fileTypes.map((type) => [
                 type,
-                mutation(schema, cleanModel, singleMode, type),
+                templater(mutation(type), schema, singleMode, [], cleanModel),
               ]),
             ),
           },
@@ -116,7 +116,13 @@ export function getModels(
             ...Object.fromEntries(
               fileTypes.map((type) => [
                 type,
-                serverSDL(cleanModel, false, type),
+                templater(
+                  serverSDL(cleanModel, false, type),
+                  schema,
+                  singleMode,
+                  [],
+                  cleanModel,
+                ),
               ]),
             ),
           },
@@ -126,7 +132,13 @@ export function getModels(
             ...Object.fromEntries(
               fileTypes.map((type) => [
                 type,
-                serverSDL(cleanModel, true, type),
+                templater(
+                  serverSDL(cleanModel, true, type),
+                  schema,
+                  singleMode,
+                  [],
+                  cleanModel,
+                ),
               ]),
             ),
           },
@@ -136,7 +148,13 @@ export function getModels(
             ...Object.fromEntries(
               fileTypes.map((type) => [
                 type,
-                clientSDL(cleanModel, false, true, type),
+                templater(
+                  clientSDL(false, true, type),
+                  schema,
+                  singleMode,
+                  [],
+                  cleanModel,
+                ),
               ]),
             ),
           },
@@ -146,7 +164,13 @@ export function getModels(
             ...Object.fromEntries(
               fileTypes.map((type) => [
                 type,
-                clientSDL(cleanModel, false, false, type),
+                templater(
+                  clientSDL(false, false, type),
+                  schema,
+                  singleMode,
+                  [],
+                  cleanModel,
+                ),
               ]),
             ),
           },
@@ -156,7 +180,13 @@ export function getModels(
             ...Object.fromEntries(
               fileTypes.map((type) => [
                 type,
-                clientSDL(cleanModel, true, false, type),
+                templater(
+                  clientSDL(true, false, type),
+                  schema,
+                  singleMode,
+                  [],
+                  cleanModel,
+                ),
               ]),
             ),
           },
@@ -164,21 +194,30 @@ export function getModels(
             fileName: `use${cleanModel.pascalPlural}`,
             location: 'client/hooks/queryAll',
             ...Object.fromEntries(
-              fileTypes.map((type) => [type, hookAll(cleanModel, type)]),
+              fileTypes.map((type) => [
+                type,
+                templater(hookAll(type), schema, singleMode, [], cleanModel),
+              ]),
             ),
           },
           hookOne: {
             fileName: `use${cleanModel.pascal}`,
             location: 'client/hooks/queryOne',
             ...Object.fromEntries(
-              fileTypes.map((type) => [type, hookOne(cleanModel, type)]),
+              fileTypes.map((type) => [
+                type,
+                templater(hookOne(type), schema, singleMode, [], cleanModel),
+              ]),
             ),
           },
           hookMut: {
             fileName: `useEdit${cleanModel.pascalPlural}`,
             location: 'client/hooks/mutations',
             ...Object.fromEntries(
-              fileTypes.map((type) => [type, hookMut(cleanModel, type)]),
+              fileTypes.map((type) => [
+                type,
+                templater(hookMut(type), schema, singleMode, [], cleanModel),
+              ]),
             ),
           },
           tsTypes: {
@@ -187,7 +226,13 @@ export function getModels(
             ...Object.fromEntries(
               fileTypes.map((type) => [
                 type,
-                clientQueries(schema, cleanModel, type),
+                templater(
+                  clientQueries(type),
+                  schema,
+                  singleMode,
+                  [],
+                  cleanModel,
+                ),
               ]),
             ),
           },

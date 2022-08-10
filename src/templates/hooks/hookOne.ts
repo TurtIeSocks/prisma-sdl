@@ -1,29 +1,30 @@
-import type { Model, Extension } from '../../assets/types'
+import type { Extension } from '../../assets/types'
 
-export function hookOne(model: Model, ext: Extension): string {
+export function hookOne(ext: Extension): string {
   return {
     'd.ts': `import type { QueryHookOptions, QueryResult } from '@apollo/client'
-import type { GqlQ${model.name}, Gql${model.name}Var } from '../../../types'
-export declare function use${model.name}(
-  options: QueryHookOptions<GqlQ${model.name}, Gql${model.name}Var>,
-): QueryResult<GqlQ${model.name}, Gql${model.name}Var>
+import type { GqlQ{{model_name}}, Gql{{model_name}}Var } from '../../../types'
+
+export declare function use{{model_name}}(
+  options: QueryHookOptions<GqlQ{{model_name}}, Gql{{model_name}}Var>,
+): QueryResult<GqlQ{{model_name}}, Gql{{model_name}}Var>
 `,
     js: `import { useQuery } from '@apollo/client'
-import { ${model.screamingSnake} } from '../../queryOne'
-export function use${model.name}(options) {
-  return useQuery(${model.screamingSnake}, options)
+import { {{model_screamingSnake}} } from '../../queryOne'
+
+export function use{{model_name}}(options) {
+  return useQuery({{model_screamingSnake}}, options)
 }
 `,
     ts: `import { useQuery } from '@apollo/client'
 import type { QueryHookOptions, QueryResult } from '@apollo/client'
+import type { GqlQ{{model_name}}, Gql{{model_name}}Var } from '../../../types'
+import { {{model_screamingSnake}} } from '../../queryOne'
 
-import type { GqlQ${model.name}, Gql${model.name}Var } from '../../../types'
-import { ${model.screamingSnake} } from '../../queryOne'
-
-export function use${model.name}(
-  options: QueryHookOptions<GqlQ${model.name}, Gql${model.name}Var>,
-): QueryResult<GqlQ${model.name}, Gql${model.name}Var> {
-  return useQuery<GqlQ${model.name}, Gql${model.name}Var>(${model.screamingSnake}, options)
+export function use{{model_name}}(
+  options: QueryHookOptions<GqlQ{{model_name}}, Gql{{model_name}}Var>,
+): QueryResult<GqlQ{{model_name}}, Gql{{model_name}}Var> {
+  return useQuery<GqlQ{{model_name}}, Gql{{model_name}}Var>({{model_screamingSnake}}, options)
 }
 `,
   }[ext]

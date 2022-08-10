@@ -1,38 +1,31 @@
-import { ES5_MODULE } from '../../assets/constants'
-import type { Model, Schema, Extension } from '../../assets/types'
+import type { Extension } from '../../assets/types'
 
-export function queryOne(
-  schema: Schema,
-  model: Model,
-  singleMode: boolean,
-  ext: Extension,
-): string {
-  const context = singleMode ? 'prisma' : `${schema.camel}Client: prisma`
-
+export function queryOne(ext: Extension): string {
   return {
     'd.ts': `import type { Context } from '../../context';
-import type { ${schema.pascal}${model.pascal} } from '../../../types';
-export declare function ${model.camel}(_parent: unknown, { ${model.pKey} }: {
-    ${model.pKey}: ${model.pType};
-}, { ${context} }: Context): Promise<${schema.pascal}${model.pascal} | null>;
+import type { {{schema_pascal}}{{model_pascal}} } from '../../../types';
+
+export declare function {{model_camel}}(_parent: unknown, { {{model_pKey}} }: {
+    {{model_pKey}}: {{model_pType}};
+}, { {{resolvers_context}} }: Context): Promise<{{schema_pascal}}{{model_pascal}} | null>;
 `,
     js: `'use strict'
-${ES5_MODULE}
-exports.${model.camel} = void 0
-async function ${model.camel}(_parent, { ${model.pKey} }, { ${context} }) {
-  return prisma.${model.camel}.findFirst({ where: { ${model.pKey} } })
+{{es5_module}}
+exports.{{model_camel}} = void 0
+async function {{model_camel}}(_parent, { {{model_pKey}} }, { {{resolvers_context}} }) {
+  return prisma.{{model_camel}}.findFirst({ where: { {{model_pKey}} } })
 }
-exports.${model.camel} = ${model.camel}
+exports.{{model_camel}} = {{model_camel}}
 `,
     ts: `import type { Context } from '../../context'
-import type { ${schema.pascal}${model.pascal} } from '../../../types'
+import type { {{schema_pascal}}{{model_pascal}} } from '../../../types'
 
-export async function ${model.camel}(
+export async function {{model_camel}}(
   _parent: unknown,
-  { ${model.pKey} }: { ${model.pKey}: ${model.pType} },
-  { ${context} }: Context,
-): Promise<${schema.pascal}${model.pascal} | null> {
-  return prisma.${model.camel}.findFirst({ where: { ${model.pKey} } })
+  { {{model_pKey}} }: { {{model_pKey}}: {{model_pType}} },
+  { {{resolvers_context}} }: Context,
+): Promise<{{schema_pascal}}{{model_pascal}} | null> {
+  return prisma.{{model_camel}}.findFirst({ where: { {{model_pKey}} } })
 }
 `,
   }[ext]

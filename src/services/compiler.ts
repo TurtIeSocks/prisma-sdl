@@ -45,4 +45,3 @@ export function compiler(
   })
   console.timeEnd(`Compiling TypeScript for ${loc}`)
 }
-
