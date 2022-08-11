@@ -3,8 +3,8 @@ import type {
   Extension,
   Model,
   ModelTemplate,
+  Options,
   Schema,
-  TemplateObj,
   ValidType,
 } from '../assets/types'
 import { hookAll } from '../templates/hooks/hookAll'
@@ -23,7 +23,7 @@ export function getModels(
   schema: Schema,
   singleMode: boolean,
   fileTypes: Extension[],
-  customTemplates: TemplateObj,
+  customTemplates: Options['customTemplates'],
 ): ModelTemplate[] {
   const models: ModelTemplate[] = (schema.schema.match(/.+{([^}]*)}/g) || [])
     .filter(
@@ -83,8 +83,17 @@ export function getModels(
         ...cleanModel,
         templates: {
           serverQueryAll: {
-            fileName: cleanModel.camelPlural,
-            location: 'server/resolvers/queryAll',
+            fileName: templater(
+              customTemplates?.serverQueryAll?.fileName ||
+                cleanModel.camelPlural,
+              schema,
+              singleMode,
+              [],
+              cleanModel,
+            ),
+            location:
+              customTemplates?.serverQueryAll?.location ||
+              'server/resolvers/queryAll',
             ...Object.fromEntries(
               fileTypes.map((ext) => [
                 ext,
@@ -99,8 +108,16 @@ export function getModels(
             ),
           },
           serverQueryOne: {
-            fileName: cleanModel.camel,
-            location: 'server/resolvers/queryOne',
+            fileName: templater(
+              customTemplates?.serverQueryOne?.fileName || cleanModel.camel,
+              schema,
+              singleMode,
+              [],
+              cleanModel,
+            ),
+            location:
+              customTemplates?.serverQueryOne?.location ||
+              'server/resolvers/queryOne',
             ...Object.fromEntries(
               fileTypes.map((ext) => [
                 ext,
@@ -115,8 +132,17 @@ export function getModels(
             ),
           },
           serverMut: {
-            fileName: `edit${cleanModel.pascalPlural}`,
-            location: 'server/resolvers/mutations',
+            fileName: templater(
+              customTemplates?.serverMut?.fileName ||
+                `edit${cleanModel.pascalPlural}`,
+              schema,
+              singleMode,
+              [],
+              cleanModel,
+            ),
+            location:
+              customTemplates?.serverMut?.location ||
+              'server/resolvers/mutations',
             ...Object.fromEntries(
               fileTypes.map((ext) => [
                 ext,
@@ -131,8 +157,17 @@ export function getModels(
             ),
           },
           serverTdQueries: {
-            fileName: cleanModel.screamingSnake,
-            location: 'server/typeDefs/queries',
+            fileName: templater(
+              customTemplates?.serverTdQueries?.fileName ||
+                cleanModel.screamingSnake,
+              schema,
+              singleMode,
+              [],
+              cleanModel,
+            ),
+            location:
+              customTemplates?.serverTdQueries?.location ||
+              'server/typeDefs/queries',
             ...Object.fromEntries(
               fileTypes.map((ext) => [
                 ext,
@@ -148,8 +183,17 @@ export function getModels(
             ),
           },
           serverTdMut: {
-            fileName: `${cleanModel.screamingSnake}_INPUT`,
-            location: 'server/typeDefs/mutations',
+            fileName: templater(
+              customTemplates?.serverTdMut?.fileName ||
+                `${cleanModel.screamingSnake}_INPUT`,
+              schema,
+              singleMode,
+              [],
+              cleanModel,
+            ),
+            location:
+              customTemplates?.serverTdMut?.location ||
+              'server/typeDefs/mutations',
             ...Object.fromEntries(
               fileTypes.map((ext) => [
                 ext,
@@ -165,8 +209,16 @@ export function getModels(
             ),
           },
           clientQueryAll: {
-            fileName: cleanModel.screamingSnakePlural,
-            location: 'client/queryAll',
+            fileName: templater(
+              customTemplates?.clientQueryAll?.fileName ||
+                cleanModel.screamingSnakePlural,
+              schema,
+              singleMode,
+              [],
+              cleanModel,
+            ),
+            location:
+              customTemplates?.clientQueryAll?.location || 'client/queryAll',
             ...Object.fromEntries(
               fileTypes.map((ext) => [
                 ext,
@@ -182,8 +234,16 @@ export function getModels(
             ),
           },
           clientQueryOne: {
-            fileName: cleanModel.screamingSnake,
-            location: 'client/queryOne',
+            fileName: templater(
+              customTemplates?.clientQueryOne?.fileName ||
+                cleanModel.screamingSnake,
+              schema,
+              singleMode,
+              [],
+              cleanModel,
+            ),
+            location:
+              customTemplates?.clientQueryOne?.location || 'client/queryOne',
             ...Object.fromEntries(
               fileTypes.map((ext) => [
                 ext,
@@ -199,8 +259,16 @@ export function getModels(
             ),
           },
           clientMut: {
-            fileName: `EDIT_${cleanModel.screamingSnakePlural}`,
-            location: 'client/mutations',
+            fileName: templater(
+              customTemplates?.clientMut?.fileName ||
+                `EDIT_${cleanModel.screamingSnakePlural}`,
+              schema,
+              singleMode,
+              [],
+              cleanModel,
+            ),
+            location:
+              customTemplates?.clientMut?.location || 'client/mutations',
             ...Object.fromEntries(
               fileTypes.map((ext) => [
                 ext,
@@ -216,8 +284,16 @@ export function getModels(
             ),
           },
           hookAll: {
-            fileName: `use${cleanModel.pascalPlural}`,
-            location: 'client/hooks/queryAll',
+            fileName: templater(
+              customTemplates?.hookAll?.fileName ||
+                `use${cleanModel.pascalPlural}`,
+              schema,
+              singleMode,
+              [],
+              cleanModel,
+            ),
+            location:
+              customTemplates?.hookAll?.location || 'client/hooks/queryAll',
             ...Object.fromEntries(
               fileTypes.map((ext) => [
                 ext,
@@ -232,8 +308,15 @@ export function getModels(
             ),
           },
           hookOne: {
-            fileName: `use${cleanModel.pascal}`,
-            location: 'client/hooks/queryOne',
+            fileName: templater(
+              customTemplates?.hookOne?.fileName || `use${cleanModel.pascal}`,
+              schema,
+              singleMode,
+              [],
+              cleanModel,
+            ),
+            location:
+              customTemplates?.hookOne?.location || 'client/hooks/queryOne',
             ...Object.fromEntries(
               fileTypes.map((ext) => [
                 ext,
@@ -248,8 +331,16 @@ export function getModels(
             ),
           },
           hookMut: {
-            fileName: `useEdit${cleanModel.pascalPlural}`,
-            location: 'client/hooks/mutations',
+            fileName: templater(
+              customTemplates?.hookMut?.fileName ||
+                `useEdit${cleanModel.pascalPlural}`,
+              schema,
+              singleMode,
+              [],
+              cleanModel,
+            ),
+            location:
+              customTemplates?.hookMut?.location || 'client/hooks/mutations',
             ...Object.fromEntries(
               fileTypes.map((ext) => [
                 ext,
@@ -264,8 +355,14 @@ export function getModels(
             ),
           },
           tsTypes: {
-            fileName: cleanModel.camelPlural,
-            location: 'types',
+            fileName: templater(
+              customTemplates?.tsTypes?.fileName || cleanModel.camelPlural,
+              schema,
+              singleMode,
+              [],
+              cleanModel,
+            ),
+            location: customTemplates?.tsTypes?.location || 'types',
             ...Object.fromEntries(
               fileTypes.map((ext) => [
                 ext,
