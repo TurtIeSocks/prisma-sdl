@@ -35,6 +35,7 @@
   },
   "scripts": {
     "start": "node .",
+    "cli": "node ./dist/cli.js",
     "dev": "ts-node src/index.ts",
     "lint": "eslint \"**/*.{ts,tsx}\" && prettier --check \"**/*.{ts,tsx}\"",
     "fix": "eslint \"**/*.{ts,tsx}\" --fix && prettier --write \"**/*.{ts,tsx}\""
