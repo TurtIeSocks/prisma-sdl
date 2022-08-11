@@ -24,6 +24,7 @@ export function getModels(
   singleMode: boolean,
   fileTypes: Extension[],
   customTemplates: Options['customTemplates'],
+  extraTemplates: Options['extraTemplates'],
 ): ModelTemplate[] {
   const models: ModelTemplate[] = (schema.schema.match(/.+{([^}]*)}/g) || [])
     .filter(
@@ -376,6 +377,22 @@ export function getModels(
               ]),
             ),
           },
+          ...Object.fromEntries(
+            (extraTemplates?.model || []).map((template, i) => [
+              i,
+              {
+                ...template,
+                location: template.location || 'custom',
+                fileName: templater(
+                  template?.fileName || `custom_${i}`,
+                  schema,
+                  singleMode,
+                  [],
+                  cleanModel,
+                ),
+              },
+            ]),
+          ),
         },
       }
     })
