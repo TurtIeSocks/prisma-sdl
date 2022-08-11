@@ -33,7 +33,9 @@
 ```
 
 ### Using the generator
+
 #### Create a script file to run the generators
+
 ```ts
 // generate.js
 import { prismaSdl } from 'prisma-sdl'
@@ -126,6 +128,7 @@ generator client {
 ```
 
 If any of your models have a DateTime or Json type, you will need to add the GraphQL Scalars package
+
 ```js
   // npm
   npm install graphql-scalars
@@ -143,6 +146,9 @@ interface Options {
   fileTypes?: ['ts', 'js', 'd.ts'] // ['js', 'd.ts']
   tscClient?: string // ''
   tscServer?: string // ''
+  customTemplates?: {
+    [key: string]: { js?: string; ts?: string; 'd.ts'?: string }
+  } // {}
 }
 ```
 
@@ -152,11 +158,13 @@ interface Options {
 - `fileTypes`: Which file types you want returned. Defaults to js and d.ts but you can add native .ts files if you'd like or only return .js if you don't want type definitions.
 - `tscClient`: The name of the tsconfig.json file that you want the TS compiler to compile the client side code with, leaving it blank uses the default templates
 - `tscServer`: The name of the tsconfig.json file that you want the TS compiler to compile the server side code with, leaving it blank uses the default templates
+- `customTemplates`: A map of custom templates to use for each file type. Available keys are `serverQueryAll`, `serverQueryOne`, `serverMut`, `serverTdQueries`, `serverTdMutations`, `clientQueryAll`, `clientQueryOne`, `clientMut`, `hookAll`, `hookOne`, `hookMut`, `tsTypes`, `allResolvers`, `typeDefs`, `context`.
 
 ## CLI Config
-- If you're loading a config from the CLI it must be in JSON format. 
+
+- If you're loading a config from the CLI it must be in JSON format.
 - By default it will search for a file named `prismaSdl.config.json` using `process.cwd()` as the root.
-- You can choose a different file name if you pass `config="my_own.config.json"` in the CLI args. 
+- You can choose a different file name if you pass `config="my_own.config.json"` in the CLI args.
 - If it doesn't find it, it will try again from the specified root directory.
 
 ## Generated Structure

@@ -7,9 +7,15 @@ export interface Options {
   fileTypes?: Extension[]
   tscClient?: string
   tscServer?: string
+  customTemplates?: TemplateObj
 }
 
-export interface SafeOptions extends Required<Options> {
+export interface TemplateObj {
+  [key: string]: ModelFile
+}
+
+export interface SafeOptions
+  extends Required<Omit<Options, 'customTemplates'>> {
   internalFileTypes: Extension[]
 }
 
@@ -76,5 +82,5 @@ export interface Model extends Base {
 }
 
 export interface ModelTemplate extends Model {
-  templates: { [key: string]: ModelFile }
+  templates: TemplateObj
 }
