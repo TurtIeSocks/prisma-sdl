@@ -10,6 +10,10 @@ export interface Options {
   customTemplates?: {
     [key: string]: Partial<ModelFile>
   }
+  extraTemplates?: {
+    model?: Partial<ModelFile>[]
+    models?: Partial<ModelFile>[]
+  }
 }
 
 export interface TemplateObj {
@@ -17,7 +21,7 @@ export interface TemplateObj {
 }
 
 export interface SafeOptions
-  extends Required<Omit<Options, 'customTemplates'>> {
+  extends Required<Omit<Options, 'customTemplates' | 'extraTemplates'>> {
   internalFileTypes: Extension[]
 }
 

@@ -146,15 +146,19 @@ interface Options {
   fileTypes?: ['ts', 'js', 'd.ts'] // ['js', 'd.ts']
   tscClient?: string // ''
   tscServer?: string // ''
-  customTemplates?: {
-    [key: string]: {
-      fileName?: string
-      location?: string
-      js?: string
-      ts?: string
-      'd.ts'?: string
-    }
-  } // {}
+  customTemplates?: { [key: string]: ModelFile } // {}
+  extraTemplates?: {
+    model?: ModelFile[]
+    models?: ModelFile[]
+  } // { model: [], models: [] }
+}
+
+interface ModelFile {
+  fileName?: string
+  location?: string
+  js?: string
+  ts?: string
+  'd.ts'?: string
 }
 ```
 
@@ -164,7 +168,11 @@ interface Options {
 - `fileTypes`: Which file types you want returned. Defaults to js and d.ts but you can add native .ts files if you'd like or only return .js if you don't want type definitions.
 - `tscClient`: The name of the tsconfig.json file that you want the TS compiler to compile the client side code with, leaving it blank uses the default templates
 - `tscServer`: The name of the tsconfig.json file that you want the TS compiler to compile the server side code with, leaving it blank uses the default templates
-- `customTemplates`: A map of custom templates, file names, and file locations to use for each file type. Available keys are `serverQueryAll`, `serverQueryOne`, `serverMut`, `serverTdQueries`, `serverTdMutations`, `clientQueryAll`, `clientQueryOne`, `clientMut`, `hookAll`, `hookOne`, `hookMut`, `tsTypes`, `allResolvers`, `typeDefs`, `context`.
+- `customTemplates`: A map of custom templates, file names, and file locations to use for each file type.
+  - Available keys are `serverQueryAll`, `serverQueryOne`, `serverMut`, `serverTdQueries`, `serverTdMutations`, `clientQueryAll`, `clientQueryOne`, `clientMut`, `hookAll`, `hookOne`, `hookMut`, `tsTypes`, `allResolvers`, `typeDefs`, `context`.
+- `extraTemplates`: Allows you to add extra templates that you might wish to generate using your Prisma schema.
+  - `model` generates a module per model in your schema, does not have access to the other models
+  - `models` generates summarized files with all models, such as `resolvers`, `typeDefs`, and `context`. Has some additional properties, does not currently support a custom location.
 
 ## CLI Config
 
