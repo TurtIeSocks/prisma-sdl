@@ -3,6 +3,7 @@ import type { Extension } from '../../assets/types'
 export function gqlContext(ext: Extension): string {
   return {
     'd.ts': `import { {{context_import_statement}} } from '{{schema_output}}'
+
 export declare type Context = {
   {{context_context}}: {{context_context_pascal}}
 }

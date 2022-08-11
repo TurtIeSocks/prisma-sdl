@@ -6,6 +6,7 @@ export function clientSDL(
   ext: Extension,
 ): string {
   const tsJs = `import { gql } from '@apollo/client'
+
 ${
   mutation
     ? `export const EDIT_{{model_screamingSnakePlural}} = gql\`

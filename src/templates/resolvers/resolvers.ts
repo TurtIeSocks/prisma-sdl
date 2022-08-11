@@ -24,6 +24,7 @@ exports.resolvers = void 0;
 const queryOne = __importStar(require("./queryOne"));
 const queryAll = __importStar(require("./queryAll"));
 const Mutation = __importStar(require("./mutations"));
+
 exports.resolvers = {
     {{resolvers_has_json_js}}
     {{resolvers_has_date_js}}

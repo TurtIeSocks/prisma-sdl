@@ -60,6 +60,7 @@ export async function edit{{model_pascalPlural}}(
 `,
     'd.ts': `import type { Context } from '../../context'
 import type { {{schema_pascal}}{{model_pascal}}{{model_json_safe_import}} } from '../../../types'
+
 export declare function edit{{model_pascalPlural}}(
   _parent: unknown,
   {
