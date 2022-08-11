@@ -4,6 +4,7 @@ export function queryAll(ext: Extension): string {
   return {
     'd.ts': `import type { Context } from '../../context'
 import type { {{schema_pascal}}{{model_pascal}} } from '../../../types'
+
 export declare function {{model_camelPlural}}(
   _parent: unknown,
   _args: unknown,
@@ -20,6 +21,7 @@ exports.{{model_camelPlural}} = {{model_camelPlural}}
 `,
     ts: `import type { Context } from '../../context'
 import type { {{schema_pascal}}{{model_pascal}} } from '../../../types'
+
 export async function {{model_camelPlural}}(
   _parent: unknown,
   _args: unknown,

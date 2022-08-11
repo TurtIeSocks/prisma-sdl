@@ -22,6 +22,7 @@ exports.{{model_screamingSnake}}${
 \`;
   `,
     ts: `import { gql } from 'apollo-server-core'
+
 export const {{model_screamingSnake}}${mutation ? '_INPUT' : ''} = gql\`
   ${mutation ? 'input' : 'type'} {{model_name}}${mutation ? 'Input' : ''} {
     {{model_td_props}}
