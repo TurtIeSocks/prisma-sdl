@@ -4,6 +4,7 @@ import type {
   Model,
   ModelTemplate,
   Schema,
+  TemplateObj,
   ValidType,
 } from '../assets/types'
 import { hookAll } from '../templates/hooks/hookAll'
@@ -22,6 +23,7 @@ export function getModels(
   schema: Schema,
   singleMode: boolean,
   fileTypes: Extension[],
+  customTemplates: TemplateObj,
 ): ModelTemplate[] {
   const models: ModelTemplate[] = (schema.schema.match(/.+{([^}]*)}/g) || [])
     .filter(
@@ -84,9 +86,15 @@ export function getModels(
             fileName: cleanModel.camelPlural,
             location: 'server/resolvers/queryAll',
             ...Object.fromEntries(
-              fileTypes.map((type) => [
-                type,
-                templater(queryAll(type), schema, singleMode, [], cleanModel),
+              fileTypes.map((ext) => [
+                ext,
+                templater(
+                  customTemplates?.serverQueryAll?.[ext] || queryAll(ext),
+                  schema,
+                  singleMode,
+                  [],
+                  cleanModel,
+                ),
               ]),
             ),
           },
@@ -94,9 +102,15 @@ export function getModels(
             fileName: cleanModel.camel,
             location: 'server/resolvers/queryOne',
             ...Object.fromEntries(
-              fileTypes.map((type) => [
-                type,
-                templater(queryOne(type), schema, singleMode, [], cleanModel),
+              fileTypes.map((ext) => [
+                ext,
+                templater(
+                  customTemplates?.serverQueryOne?.[ext] || queryOne(ext),
+                  schema,
+                  singleMode,
+                  [],
+                  cleanModel,
+                ),
               ]),
             ),
           },
@@ -104,9 +118,15 @@ export function getModels(
             fileName: `edit${cleanModel.pascalPlural}`,
             location: 'server/resolvers/mutations',
             ...Object.fromEntries(
-              fileTypes.map((type) => [
-                type,
-                templater(mutation(type), schema, singleMode, [], cleanModel),
+              fileTypes.map((ext) => [
+                ext,
+                templater(
+                  customTemplates?.serverMut?.[ext] || mutation(ext),
+                  schema,
+                  singleMode,
+                  [],
+                  cleanModel,
+                ),
               ]),
             ),
           },
@@ -114,10 +134,11 @@ export function getModels(
             fileName: cleanModel.screamingSnake,
             location: 'server/typeDefs/queries',
             ...Object.fromEntries(
-              fileTypes.map((type) => [
-                type,
+              fileTypes.map((ext) => [
+                ext,
                 templater(
-                  serverSDL(cleanModel, false, type),
+                  customTemplates?.serverTdQueries?.[ext] ||
+                    serverSDL(cleanModel, false, ext),
                   schema,
                   singleMode,
                   [],
@@ -130,10 +151,11 @@ export function getModels(
             fileName: `${cleanModel.screamingSnake}_INPUT`,
             location: 'server/typeDefs/mutations',
             ...Object.fromEntries(
-              fileTypes.map((type) => [
-                type,
+              fileTypes.map((ext) => [
+                ext,
                 templater(
-                  serverSDL(cleanModel, true, type),
+                  customTemplates?.serverTdMut?.[ext] ||
+                    serverSDL(cleanModel, true, ext),
                   schema,
                   singleMode,
                   [],
@@ -146,10 +168,11 @@ export function getModels(
             fileName: cleanModel.screamingSnakePlural,
             location: 'client/queryAll',
             ...Object.fromEntries(
-              fileTypes.map((type) => [
-                type,
+              fileTypes.map((ext) => [
+                ext,
                 templater(
-                  clientSDL(false, true, type),
+                  customTemplates?.clientQueryAll?.[ext] ||
+                    clientSDL(false, true, ext),
                   schema,
                   singleMode,
                   [],
@@ -162,10 +185,11 @@ export function getModels(
             fileName: cleanModel.screamingSnake,
             location: 'client/queryOne',
             ...Object.fromEntries(
-              fileTypes.map((type) => [
-                type,
+              fileTypes.map((ext) => [
+                ext,
                 templater(
-                  clientSDL(false, false, type),
+                  customTemplates?.clientQueryOne?.[ext] ||
+                    clientSDL(false, false, ext),
                   schema,
                   singleMode,
                   [],
@@ -178,10 +202,11 @@ export function getModels(
             fileName: `EDIT_${cleanModel.screamingSnakePlural}`,
             location: 'client/mutations',
             ...Object.fromEntries(
-              fileTypes.map((type) => [
-                type,
+              fileTypes.map((ext) => [
+                ext,
                 templater(
-                  clientSDL(true, false, type),
+                  customTemplates?.clientMut?.[ext] ||
+                    clientSDL(true, false, ext),
                   schema,
                   singleMode,
                   [],
@@ -194,9 +219,15 @@ export function getModels(
             fileName: `use${cleanModel.pascalPlural}`,
             location: 'client/hooks/queryAll',
             ...Object.fromEntries(
-              fileTypes.map((type) => [
-                type,
-                templater(hookAll(type), schema, singleMode, [], cleanModel),
+              fileTypes.map((ext) => [
+                ext,
+                templater(
+                  customTemplates?.hookAll?.[ext] || hookAll(ext),
+                  schema,
+                  singleMode,
+                  [],
+                  cleanModel,
+                ),
               ]),
             ),
           },
@@ -204,9 +235,15 @@ export function getModels(
             fileName: `use${cleanModel.pascal}`,
             location: 'client/hooks/queryOne',
             ...Object.fromEntries(
-              fileTypes.map((type) => [
-                type,
-                templater(hookOne(type), schema, singleMode, [], cleanModel),
+              fileTypes.map((ext) => [
+                ext,
+                templater(
+                  customTemplates?.hookOne?.[ext] || hookOne(ext),
+                  schema,
+                  singleMode,
+                  [],
+                  cleanModel,
+                ),
               ]),
             ),
           },
@@ -214,9 +251,15 @@ export function getModels(
             fileName: `useEdit${cleanModel.pascalPlural}`,
             location: 'client/hooks/mutations',
             ...Object.fromEntries(
-              fileTypes.map((type) => [
-                type,
-                templater(hookMut(type), schema, singleMode, [], cleanModel),
+              fileTypes.map((ext) => [
+                ext,
+                templater(
+                  customTemplates?.hookMut?.[ext] || hookMut(ext),
+                  schema,
+                  singleMode,
+                  [],
+                  cleanModel,
+                ),
               ]),
             ),
           },
@@ -224,10 +267,10 @@ export function getModels(
             fileName: cleanModel.camelPlural,
             location: 'types',
             ...Object.fromEntries(
-              fileTypes.map((type) => [
-                type,
+              fileTypes.map((ext) => [
+                ext,
                 templater(
-                  clientQueries(type),
+                  customTemplates?.tsTypes?.[ext] || clientQueries(ext),
                   schema,
                   singleMode,
                   [],

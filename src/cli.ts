@@ -46,4 +46,4 @@ const tscClient = tscClientRaw ? tscClientRaw.split('=')[1] : config.tscClient |
 const tscServerRaw = args.find((arg) => arg.startsWith('tscServer='))
 const tscServer = tscServerRaw ? tscServerRaw.split('=')[1] : config.tscServer || ''
 
-prismaSdl({ root, dest, fileTypes, header, tscClient, tscServer })
+prismaSdl({ root, dest, fileTypes, header, tscClient, tscServer, customTemplates: config.customTemplates })
