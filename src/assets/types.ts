@@ -7,7 +7,9 @@ export interface Options {
   fileTypes?: Extension[]
   tscClient?: string
   tscServer?: string
-  customTemplates?: TemplateObj
+  customTemplates?: {
+    [key: string]: Partial<ModelFile>
+  }
 }
 
 export interface TemplateObj {
