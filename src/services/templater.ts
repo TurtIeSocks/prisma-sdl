@@ -9,6 +9,7 @@ import {
   ES5_SET_DEFAULT,
 } from '../assets/constants'
 import type { Model, ModelTemplate, Schema } from '../assets/types'
+import { getTsType } from './utils'
 
 export function templater(
   template: string,
@@ -42,6 +43,24 @@ export function templater(
                 .map((x) => `'${x.name}'`)
                 .join(' | ')}>`
             : `${schema.pascal}${model.pascal}`,
+          rest_select: model.properties
+            .map(
+              (x) =>
+                `${x.name}: '${x.name}' in req.query && !req.query.${x.name},`,
+            )
+            .join('\n                '),
+          rest_where: model.properties
+            .filter((x) => !x.auto)
+            .map(
+              (x) =>
+                `${x.name}: 
+                  req.query?.${x.name} && typeof req.query.${
+                  x.name
+                } === '${getTsType(x.type, true)}'
+                    ? { equals: req.query.${x.name} }
+                    : undefined,`,
+            )
+            .join('\n                '),
         }
       : {},
     context: {

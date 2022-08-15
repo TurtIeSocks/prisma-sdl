@@ -16,6 +16,7 @@
   - GraphQL Resolvers
   - GraphQL Context
   - Client side GQL types
+  - Server rest apis
 - Generates hooks, SDLs, and resolvers ready for:
   - Querying all data from each model
   - Querying a single model by primary key
@@ -232,6 +233,11 @@ Respective exported names are commented for reference
 │   │       ├── foos.ts // foos
 │   │       ├── bars.ts // bars
 │   │       └── index.ts
+├── rest
+│   ├── express
+│   │   ├── foos.ts // foos
+│   │   ├── bars.ts // bars
+│   │   └── index.ts
 │   └── typeDefs
 │       ├── typeDefs.ts // typeDefs
 │       ├── mutations

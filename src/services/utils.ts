@@ -48,7 +48,7 @@ export function getConventions(name: string): Base {
   }
 }
 
-export function getTsType(type: ValidType[number]) {
+export function getTsType(type: ValidType[number], stringType = false): string {
   switch (type) {
     case 'String':
       return 'string'
@@ -56,12 +56,13 @@ export function getTsType(type: ValidType[number]) {
     case 'Int':
       return 'number'
     case 'Bool':
+    case 'Boolean':
       return 'boolean'
     case 'DateTime':
-      return 'Date'
+      return stringType ? 'object' : 'Date'
     case 'Json':
-      return 'JSON'
+      return stringType ? 'object' : 'JSON'
     default:
-      return 'unknown'
+      return 'object'
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "prisma-sdl",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "description": "SDL generator that creates useful GQL files from a Prisma Schema",
@@ -42,6 +42,7 @@
   },
   "devDependencies": {
     "@apollo/client": "^3.0.0",
+    "@types/express": "^4.17.13",
     "@types/node": "^18.0.6",
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",
@@ -50,6 +51,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-plugin-import": "^2.24.2",
+    "express": "^4.18.1",
     "graphql": "^16.0.0",
     "graphql-scalars": "^1.14.1",
     "prettier": "^2.4.0",
@@ -59,6 +61,7 @@
   "peerDependencies": {
     "@apollo/client": "^3.0.0",
     "apollo-server-core": "^3.0.0",
+    "express": "^4.18.1",
     "graphql": "^16.0.0",
     "graphql-scalars": "^1.14.1",
     "typescript": "^4.0.0"
@@ -68,6 +71,9 @@
       "optional": true
     },
     "apollo-server-core": {
+      "optional": true
+    },
+    "express": {
       "optional": true
     },
     "graphql": {
