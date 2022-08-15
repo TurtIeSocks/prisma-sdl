@@ -15,8 +15,9 @@ import { mutation } from '../templates/resolvers/mutation'
 import { queryAll } from '../templates/resolvers/queryAll'
 import { queryOne } from '../templates/resolvers/queryOne'
 import { serverSDL } from '../templates/typeDefs/serverSDL'
-import { getConventions, getTsType } from './utils'
 import { clientQueries } from '../templates/types/clientQueries'
+import { restExpress } from '../templates/rest/express'
+import { getConventions, getTsType } from './utils'
 import { templater } from './templater'
 
 export function getModels(
@@ -347,6 +348,29 @@ export function getModels(
                 ext,
                 templater(
                   customTemplates?.hookMut?.[ext] || hookMut(ext),
+                  schema,
+                  singleMode,
+                  [],
+                  cleanModel,
+                ),
+              ]),
+            ),
+          },
+          restExpress: {
+            fileName: templater(
+              customTemplates?.restExpress?.fileName || cleanModel.camelPlural,
+              schema,
+              singleMode,
+              [],
+              cleanModel,
+            ),
+            location:
+              customTemplates?.restExpress?.location || '/server/rest/express',
+            ...Object.fromEntries(
+              fileTypes.map((ext) => [
+                ext,
+                templater(
+                  customTemplates?.restExpress?.[ext] || restExpress(ext),
                   schema,
                   singleMode,
                   [],
