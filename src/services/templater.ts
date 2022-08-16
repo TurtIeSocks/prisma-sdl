@@ -51,15 +51,19 @@ export function templater(
             .join('\n                '),
           rest_where: model.properties
             .filter((x) => !x.auto)
-            .map(
-              (x) =>
-                `${x.name}: 
-                  req.query?.${x.name} && typeof req.query.${
-                  x.name
-                } === '${getTsType(x.type, true)}'
-                    ? { equals: req.query.${x.name} }
-                    : undefined,`,
-            )
+            .map((x) => {
+              const type = getTsType(x.type, true)
+              return `${x.name}: 
+                req.query?.${x.name} && ${
+                type === 'number'
+                  ? `+req.query.${x.name}`
+                  : `typeof req.query.${x.name} === '${type}'`
+              }
+                  ? { equals: ${type === 'number' ? '+' : ''}req.query.${
+                x.name
+              } }
+                  : undefined,`
+            })
             .join('\n                '),
         }
       : {},

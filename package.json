@@ -1,6 +1,6 @@
 {
   "name": "prisma-sdl",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "description": "SDL generator that creates useful GQL files from a Prisma Schema",
