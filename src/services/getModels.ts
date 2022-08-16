@@ -59,7 +59,6 @@ export function getModels(
               .filter((word) => word.trim())
             if (propName && propType) {
               const jsonCheck = propType.includes('Json') ? 'JSON' : propType.replace(/\?/g, '')
-              if (key?.trim() === 'Variable') console.log(propName, propType, jsonCheck)
               return {
                 name: propName,
                 type: (VALID_TYPES.includes(
