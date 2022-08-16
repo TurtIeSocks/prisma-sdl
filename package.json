@@ -1,6 +1,6 @@
 {
   "name": "prisma-sdl",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "description": "SDL generator that creates useful GQL files from a Prisma Schema",
@@ -36,7 +36,7 @@
   "scripts": {
     "start": "node .",
     "cli": "node ./dist/cli.js",
-    "dev": "ts-node src/index.ts",
+    "dev": "ts-node src/cli.ts",
     "lint": "eslint \"**/*.{ts,tsx}\" && prettier --check \"**/*.{ts,tsx}\"",
     "fix": "eslint \"**/*.{ts,tsx}\" --fix && prettier --write \"**/*.{ts,tsx}\""
   },

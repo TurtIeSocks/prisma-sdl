@@ -58,13 +58,14 @@ export function getModels(
               .split(' ')
               .filter((word) => word.trim())
             if (propName && propType) {
-              const jsonCheck = propType.includes('Json') ? 'JSON' : propType
+              const jsonCheck = propType.includes('Json') ? 'JSON' : propType.replace(/\?/g, '')
+              if (key?.trim() === 'Variable') console.log(propName, propType, jsonCheck)
               return {
                 name: propName,
                 type: (VALID_TYPES.includes(
                   jsonCheck as typeof VALID_TYPES[number],
                 )
-                  ? jsonCheck.replace(/\?/g, '')
+                  ? jsonCheck
                   : '') as ValidType,
                 optional: propType.includes('?'),
                 auto: details
